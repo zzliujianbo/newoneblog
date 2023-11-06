@@ -23,8 +23,11 @@ curl xxx
     "server_ip": "",
     //绑定的服务器端口
     "server_port": 8080,
-    //md目录
-    //使用模板
+    //title
+    //keyword
+    //markdown目录
+    //统计脚本（考虑脚本方式）
+    //模板路径
     //public目录
     //关于我们
 }

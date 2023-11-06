@@ -1,0 +1,10 @@
+{
+    "server_ip": "127.0.0.1",
+    "server_port": 8080,
+    "title": "newoneblog",
+    "keyword": "rust|blog|newoneblog",
+    "markdown_path": "./markdown",
+    "template_path": "./template/newoneblog",
+    "public_path": "./public",
+    "about_md_path": "关于我们md的路径（相对路径）"
+}
