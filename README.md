@@ -4,7 +4,9 @@ newoneblog是一个基于rust开发的博客程序，实现了类似于`github p
 主要功能：
 
 1、自动将markdown目录转义为html静态文件。
+
 2、静态文件模板功能。
+
 3、web服务。
 
 newoneblog主要基于poem、xx开发。
@@ -24,12 +26,18 @@ curl xxx
     //绑定的服务器端口
     "server_port": 8080,
     //title
+    "title": "newoneblog",
     //keyword
+    "keyword": "博客|blog",
     //markdown目录
+    "markdown_dir": "./markdown",
     //统计脚本（考虑脚本方式）
     //模板路径
+    "template_path": "./template",
     //public目录
+    "public_path": "./public",
     //关于我们
+    "about": "newoneblog是一个基于rust开发的博客程序，实现了类似于github pages的功能。"
 }
 
 ```

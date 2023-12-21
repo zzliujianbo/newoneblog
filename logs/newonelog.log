@@ -1,0 +1,26 @@
+7972 main[28080] - 2023-12-21T15:24:00.516292400+08:00 INFO newoneblog[7] : newoneblog start
+7972 main[28080] - 2023-12-21T15:24:00.516895100+08:00 INFO newoneblog[9] : conf: Conf { server_ip: "127.0.0.1", server_port: 8080, title: "newoneblog", keyword: "rust|blog|newoneblog", markdown_path: "./markdown", template_path: "./template/gewoneblog", public_path: "./public", about_md_path: "关于我们md的路径（相对路径）" }
+13948 main[31568] - 2023-12-21T15:24:01.347646700+08:00 INFO newoneblog[7] : newoneblog start
+13948 main[31568] - 2023-12-21T15:24:01.348116200+08:00 INFO newoneblog[9] : conf: Conf { server_ip: "127.0.0.1", server_port: 8080, title: "newoneblog", keyword: "rust|blog|newoneblog", markdown_path: "./markdown", template_path: "./template/gewoneblog", public_path: "./public", about_md_path: "关于我们md的路径（相对路径）" }
+18936 main[33612] - 2023-12-21T15:24:11.385650400+08:00 INFO newoneblog[7] : newoneblog start
+18936 main[33612] - 2023-12-21T15:24:11.387100700+08:00 INFO newoneblog[9] : conf: Conf {
+    server_ip: "127.0.0.1",
+    server_port: 8080,
+    title: "newoneblog",
+    keyword: "rust|blog|newoneblog",
+    markdown_path: "./markdown",
+    template_path: "./template/gewoneblog",
+    public_path: "./public",
+    about_md_path: "关于我们md的路径（相对路径）",
+}
+17956 main[30624] - 2023-12-21T15:24:12.217206800+08:00 INFO newoneblog[7] : newoneblog start
+17956 main[30624] - 2023-12-21T15:24:12.218397200+08:00 INFO newoneblog[9] : conf: Conf {
+    server_ip: "127.0.0.1",
+    server_port: 8080,
+    title: "newoneblog",
+    keyword: "rust|blog|newoneblog",
+    markdown_path: "./markdown",
+    template_path: "./template/gewoneblog",
+    public_path: "./public",
+    about_md_path: "关于我们md的路径（相对路径）",
+}
