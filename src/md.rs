@@ -12,7 +12,7 @@ pub async fn to_html(conf: &Conf) {
 
 /// 扫描markdown文件
 pub async fn scan_md(md_path: &str) -> Vec<String> {
-    vec![]
+    vec!["newoneblog/readme.md".to_string()]
 }
 
 /// 生成html文件
@@ -30,10 +30,20 @@ pub async fn gen_html(md_files: Vec<String>, conf: &Conf) -> Result<(), tera::Er
     };
 
     //读取markdown文件
+    md_files.iter().for_each(|md_file| {
+        info!("md_file: {}", md_file);
+        let mut context = Context::new();
+        context.insert("content", "");
+        let r = templates.render("content.html", &context);
+        match r {
+            Ok(s) => {
+                info!("s:{}", s);
+            }
+            Err(e) => {
+                info!("e:{}", e);
+            }
+        }
+    });
 
-    let mut context = Context::new();
-    context.insert("content", "");
-    let r = templates.render("content.html", &context)?;
-    //info!("template index:{}", r);
     Ok(())
 }

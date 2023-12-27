@@ -261,3 +261,33 @@
 39976 main[30164] - 2023-12-27T16:59:21.791803200+08:00 DEBUG globset[448] : glob converted to regex: Glob { glob: "**/*", re: "(?-u)^(?:/?|.*/)[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, ZeroOrMore]) }
 39976 main[30164] - 2023-12-27T16:59:21.792003500+08:00 DEBUG globset[453] : built glob set; 0 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
 39976 main[30164] - 2023-12-27T16:59:21.793987600+08:00 INFO newoneblog::md[34] : template index:Hello 0.2
+31160 main[24384] - 2023-12-27T17:50:52.315050900+08:00 INFO newoneblog[9] : newoneblog start
+31160 main[24384] - 2023-12-27T17:50:52.325713700+08:00 INFO newoneblog[11] : conf: Conf {
+    server_ip: "127.0.0.1",
+    server_port: 8080,
+    title: "newoneblog",
+    keyword: "rust|blog|newoneblog",
+    markdown_path: "./markdown",
+    template_path: "./templates/newoneblog",
+    public_path: "./public",
+    about_md_path: "关于我们md的路径（相对路径）",
+}
+31160 main[24384] - 2023-12-27T17:50:52.326430400+08:00 DEBUG globset[448] : glob converted to regex: Glob { glob: "**/*", re: "(?-u)^(?:/?|.*/)[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, ZeroOrMore]) }
+31160 main[24384] - 2023-12-27T17:50:52.326640500+08:00 DEBUG globset[453] : built glob set; 0 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
+31160 main[24384] - 2023-12-27T17:50:52.329436700+08:00 INFO newoneblog::md[34] : md_file:newoneblog/readme.md
+31160 main[24384] - 2023-12-27T17:50:52.329649100+08:00 INFO newoneblog::md[43] : e:Template 'content.html' not found
+34788 main[33216] - 2023-12-27T17:54:12.272106200+08:00 INFO newoneblog[9] : newoneblog start
+34788 main[33216] - 2023-12-27T17:54:12.273293100+08:00 INFO newoneblog[11] : conf: Conf {
+    server_ip: "127.0.0.1",
+    server_port: 8080,
+    title: "newoneblog",
+    keyword: "rust|blog|newoneblog",
+    markdown_path: "./markdown",
+    template_path: "./templates/newoneblog",
+    public_path: "./public",
+    about_md_path: "关于我们md的路径（相对路径）",
+}
+34788 main[33216] - 2023-12-27T17:54:12.273967800+08:00 DEBUG globset[448] : glob converted to regex: Glob { glob: "**/*", re: "(?-u)^(?:/?|.*/)[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, ZeroOrMore]) }
+34788 main[33216] - 2023-12-27T17:54:12.274223600+08:00 DEBUG globset[453] : built glob set; 0 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
+34788 main[33216] - 2023-12-27T17:54:12.276856300+08:00 INFO newoneblog::md[34] : md_file: newoneblog/readme.md
+34788 main[33216] - 2023-12-27T17:54:12.277021200+08:00 INFO newoneblog::md[43] : e:Template 'content.html' not found
