@@ -16,3 +16,4 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 markdown = "1.0.0-alpha.16"
 tera = "1.19.1"
 lazy_static = "1.4.0"
+pinyin = "0.10"
