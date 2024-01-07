@@ -1,2 +1,4 @@
 /target
 /logs
+/public
+settings.json
