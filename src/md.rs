@@ -1,8 +1,6 @@
 use std::{
-    fmt::format,
-    fs::{self, read_to_string, File},
-    io::Read,
-    path::{Path, PathBuf},
+    fs::{self, read_to_string},
+    path::{Path, PathBuf, MAIN_SEPARATOR_STR},
 };
 
 use crate::conf::Conf;
@@ -12,13 +10,42 @@ use tera::{self, Context, Tera};
 
 /// markdown to html
 pub async fn run(conf: &Conf) {
-    let md_paths = scan_mdfiles(&conf.markdown_path).await;
-    handle_mdfiles(md_paths, conf).await;
+    let md_paths = scan_mdfiles(&conf.markdown_path);
+    let _ = handle_mdfiles(md_paths, conf).await;
 }
 
 /// 扫描markdown文件
-pub async fn scan_mdfiles(md_base_path: &str) -> Vec<PathBuf> {
-    vec![Path::new("./markdown/newoneblog/readme.md").to_path_buf()]
+pub fn scan_mdfiles(md_base_path: &str) -> Vec<PathBuf> {
+    //递归获取markdown文件
+    let mut md_paths = Vec::new();
+    let dir = match fs::read_dir(md_base_path) {
+        Ok(dir) => dir,
+        Err(e) => {
+            error!("read_dir error: {}", e);
+            return md_paths;
+        }
+    };
+    for entry in dir {
+        let entry = match entry {
+            Ok(entry) => entry,
+            Err(e) => {
+                error!("read_dir entry error: {}", e);
+                continue;
+            }
+        };
+        let path = entry.path();
+        if path.is_dir() {
+            let vec = scan_mdfiles(path.to_str().unwrap());
+            md_paths.extend(vec);
+        } else if path.is_file() {
+            if let Some(ext) = path.extension() {
+                if ext == "md" {
+                    md_paths.push(path);
+                }
+            }
+        }
+    }
+    md_paths
 }
 
 /// 生成html文件
@@ -35,36 +62,30 @@ pub async fn handle_mdfiles(md_paths: Vec<PathBuf>, conf: &Conf) -> Result<(), t
     };
 
     let md_base_path = format!(
-        "{}/",
+        "{}{}",
         Path::new(&conf.markdown_path)
             .to_str()
             .unwrap()
-            .trim_end_matches('/')
+            .trim_end_matches('/'),
+        MAIN_SEPARATOR_STR
     );
     //生成html文件
     md_paths.iter().for_each(|md_path| {
+        let md_path_str = md_path.to_str().unwrap();
         let (pinyin_filename, md_content) = match get_md_data(md_path) {
             Some((pinyin_filename, md_content)) => (pinyin_filename, md_content),
             None => {
-                error!("get_md_data error: {}", md_path.to_str().unwrap());
+                error!("get_md_data error: {}", md_path_str);
                 return;
             }
         };
-        info!(
-            "{} --> pinyin_filename: {}",
-            md_path.to_str().unwrap(),
-            pinyin_filename
-        );
-        let mut html_path = Path::new(&conf.public_path)
-            .join(md_path.to_str().unwrap().trim_start_matches(&md_base_path));
+        info!("{} --> pinyin_filename: {}", md_path_str, pinyin_filename);
+        let mut html_path =
+            Path::new(&conf.public_path).join(md_path_str.trim_start_matches(&md_base_path));
         html_path.set_file_name(format!("{}.html", pinyin_filename));
-        let html_file_path = html_path.to_str().unwrap();
-        info!(
-            "{} --> map html: {}",
-            md_path.to_str().unwrap(),
-            html_file_path
-        );
-        write_html(markdown::to_html(&md_content), html_file_path, &tera);
+        let html_file_path = str::topinyin(html_path.to_str().unwrap());
+        info!("{} --> map html: {}", md_path_str, html_file_path);
+        write_html(markdown::to_html(&md_content), &html_file_path, &tera);
     });
 
     Ok(())
@@ -88,7 +109,7 @@ pub fn write_html(html_content: String, html_file: &str, tera: &Tera) {
             return;
         }
     };
-    debug!("html_file_path:{}, content: {}", html_file, content);
+    debug!("html_file_path: {}, content: {}", html_file, content);
     //判断文件夹是否存在
     let html_file_path = Path::new(html_file);
     if !html_file_path.parent().unwrap().exists() {

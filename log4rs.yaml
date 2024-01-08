@@ -7,13 +7,13 @@ appenders:
     kind: console
     encoder:
       # log 信息模式
-      pattern: "{P} {T}[{I}] - {d} {l} {M}[{L}] {X(request_id)}: {m}{n}"
+      pattern: "{d} [{P}:{T}:{I}] {l} {M}[{L}] {X(request_id)} - {m}{n}"
   file:
     kind: rolling_file
     path: "logs/newonelog.log"
     encoder:
       # log 信息模式
-      pattern: "{P} {T}[{I}] - {d} {l} {M}[{L}] {X(request_id)}: {m}{n}"
+      pattern: "{d} [{P}:{T}:{I}] {l} {M}[{L}] {X(request_id)} - {m}{n}"
     policy:
       kind: compound # 默认值, 即使用所有 policy
       trigger: # 当文件超过10mb 时触发 rotate
