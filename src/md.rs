@@ -85,9 +85,45 @@ pub async fn handle_mdfiles(md_paths: Vec<PathBuf>, conf: &Conf) -> Result<(), t
         html_path.set_file_name(format!("{}.html", pinyin_filename));
         let html_file_path = str::topinyin(html_path.to_str().unwrap());
         info!("{} --> map html: {}", md_path_str, html_file_path);
-        write_html(markdown::to_html(&md_content), &html_file_path, &tera);
-    });
 
+        let mut context = Context::new();
+        let html_content = markdown::to_html(&md_content);
+        context.insert("title", &conf.title);
+        context.insert("keyword", &conf.keyword);
+        context.insert("content", &html_content);
+        write_html(context, "content.html", &html_file_path, &tera);
+    });
+    //生成首页
+    let mut context = Context::new();
+    context.insert("title", &conf.title);
+    context.insert("keyword", &conf.keyword);
+    //context.insert("content", &html_content);
+    write_html(
+        context,
+        "index.html",
+        &format!("{}/index.html", &conf.public_path),
+        &tera,
+    );
+
+    //复制assets文件夹
+    let assets_path = Path::new(&conf.template_path).join("assets");
+    let assets_path_str = assets_path.to_str().unwrap();
+    // let public_assets_path = Path::new(&conf.public_path);
+    // let public_assets_path_str = public_assets_path.to_str().unwrap();
+    info!("copy assets: {} --> {}", assets_path_str, conf.public_path);
+    //fs::copy(assets_path_str, &conf.public_path).unwrap();
+    match fs_extra::dir::copy(
+        assets_path_str,
+        &conf.public_path,
+        &fs_extra::dir::CopyOptions::new().overwrite(true),
+    ) {
+        Ok(_) => {
+            info!("copy assets success");
+        }
+        Err(e) => {
+            error!("copy assets error: {}", e);
+        }
+    }
     Ok(())
 }
 
@@ -98,11 +134,10 @@ pub fn get_md_data(md_file: &Path) -> Option<(String, String)> {
     ))
 }
 
-pub fn write_html(html_content: String, html_file: &str, tera: &Tera) {
+pub fn write_html(context: Context, template_name: &str, html_file: &str, tera: &Tera) {
     info!("render html: {}", html_file);
-    let mut context = Context::new();
-    context.insert("content", &html_content);
-    let content = match tera.render("content.html", &context) {
+
+    let content = match tera.render(template_name, &context) {
         Ok(content) => content,
         Err(e) => {
             error!("render error: {}", e);

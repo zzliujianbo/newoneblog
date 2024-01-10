@@ -1,5 +1,12 @@
-<html>
-    <body>
-        Hello {{ content | safe }}
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}
+{{title}}
+{% endblock title %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="/public/assets/content.css" />
+{% endblock head %}
+
+{% block content %}
+{{ content | safe }}
+{% endblock content %}
