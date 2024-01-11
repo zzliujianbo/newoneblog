@@ -4,17 +4,31 @@
 {% endblock title %}
 {% block head %}
 {{ super() }}
-<link rel="stylesheet" href="/public/assets/index.css" />
+<link rel="stylesheet" href="/assets/index.css" />
 {% endblock head %}
 
 {% block content %}
-首页
+<div id="nav">
+    <ul>
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li>
+            <a href="{{about_url | safe}}">关于</a>
+        </li>
+    </ul>
+
+</div>
 {% for md in md_metas %}
+{%if md.title != 'about'%}
+<div class="article">
     <b>
-        <a href="{{md.html_url}}">{{md.title}}</a>
+        <a href="{{md.html_url | safe}}">{{md.title}}</a>
     </b>
     <p>
         {{md.description}}
     </p>
+</div>
+{%endif%}
 {% endfor %}
 {% endblock content %}

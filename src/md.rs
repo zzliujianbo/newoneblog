@@ -218,7 +218,7 @@ fn write_html(template_name: &str, html_file: &str, context: Context, tera: &Ter
     let content = match tera.render(template_name, &context) {
         Ok(content) => content,
         Err(e) => {
-            error!("render error: {}", e);
+            error!("render html error: {}", e);
             return;
         }
     };

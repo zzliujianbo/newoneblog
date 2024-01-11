@@ -1,6 +1,6 @@
 {
     "server_ip": "127.0.0.1",
-    "server_port": 8080,
+    "server_port": 3000,
     "title": "newoneblog",
     "keyword": "rust|blog|newoneblog",
     "markdown_path": "./markdown",
