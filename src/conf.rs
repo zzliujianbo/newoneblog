@@ -1,5 +1,10 @@
+use std::sync::OnceLock;
+
 use super::json;
 use serde::Deserialize;
+
+pub static CONF: OnceLock<Conf> = OnceLock::new();
+
 #[derive(Deserialize, Debug)]
 pub struct Conf {
     /// 服务器IP
@@ -21,6 +26,11 @@ pub struct Conf {
 }
 
 impl Conf {
+    pub fn init_by_file(file_path: &str) {
+        let conf: Conf = Self::new_by_file(file_path);
+        CONF.set(conf);
+    }
+
     pub fn new_by_file(file_path: &str) -> Self {
         let conf: Conf = json::read_from_file(file_path).unwrap();
         conf

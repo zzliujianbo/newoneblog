@@ -8,9 +8,8 @@ use log::info;
 
 pub async fn run() -> Result<(), std::io::Error> {
     info!("newoneblog start");
-    let conf = conf::Conf::new_by_file("conf.json");
-    info!("conf: {:#?}", conf);
-    md::run(&conf).await;
-    server::run(&conf).await;
+    conf::Conf::init_by_file("conf.json");
+    md::run().await;
+    server::run().await;
     Ok(())
 }

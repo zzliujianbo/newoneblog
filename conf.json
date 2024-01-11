@@ -5,6 +5,5 @@
     "keyword": "rust|blog|newoneblog",
     "markdown_path": "./markdown",
     "template_path": "./templates/newoneblog",
-    "public_path": "./public",
-    "about_md_path": "关于我们md的路径（相对路径）"
+    "public_path": "./public"
 }

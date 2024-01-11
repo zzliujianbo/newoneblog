@@ -1,28 +1,92 @@
 use std::{
     fs::{self, read_to_string},
-    path::{Path, PathBuf, MAIN_SEPARATOR_STR},
+    path::{Path, MAIN_SEPARATOR_STR},
 };
 
-use crate::conf::Conf;
+use crate::conf::{Conf, CONF};
 use crate::str;
 use log::{debug, error, info};
-use tera::{self, Context, Tera};
+use serde::Serialize;
+use tera::{Context, Tera};
 
 /// markdown to html
-pub async fn run(conf: &Conf) {
-    let md_paths = scan_mdfiles(&conf.markdown_path);
-    let _ = handle_mdfiles(md_paths, conf).await;
+pub async fn run() {
+    let conf = CONF.get().unwrap();
+    let public_path = Path::new(&conf.public_path);
+    //判断public文件夹是否存在
+    if !public_path.exists() {
+        panic!("public_path not exists: {}", &conf.public_path);
+    }
+
+    let md_path = Path::new(&conf.markdown_path);
+    //判断markdown文件夹是否存在
+    if !md_path.exists() {
+        panic!("markdown_path not exists: {}", &conf.markdown_path);
+    }
+
+    let tera = tera(&conf.template_path).unwrap();
+
+    let mut context = Context::new();
+    context.insert("title", &conf.title);
+    context.insert("keyword", &conf.keyword);
+
+    let md_metas = handle_md(
+        &conf.markdown_path,
+        &conf.markdown_path,
+        &conf.public_path,
+        &tera,
+        context.clone(),
+    );
+    info!("md_metas: {:?}", md_metas);
+
+    //生成首页
+    let mut index_context = context.clone();
+    index_context.insert("md_metas", &md_metas);
+    //链接about页面
+    index_context.insert("about_url", "about.html");
+    write_html(
+        "index.html",
+        &format!("{}/index.html", &conf.public_path),
+        index_context,
+        &tera,
+    );
+    
+
+    //复制assets文件夹
+    let assets_path = Path::new(&conf.template_path).join("assets");
+    info!(
+        "copy assets: {} --> {}",
+        assets_path.to_str().unwrap(),
+        conf.public_path
+    );
+    match fs_extra::dir::copy(
+        assets_path,
+        &conf.public_path,
+        &fs_extra::dir::CopyOptions::new().overwrite(true),
+    ) {
+        Ok(_) => {
+            info!("copy assets success");
+        }
+        Err(e) => {
+            error!("copy assets error: {}", e);
+        }
+    }
 }
 
-/// 扫描markdown文件
-pub fn scan_mdfiles(md_base_path: &str) -> Vec<PathBuf> {
-    //递归获取markdown文件
-    let mut md_paths = Vec::new();
-    let dir = match fs::read_dir(md_base_path) {
+/// 扫描并处理markdown文件
+fn handle_md(
+    md_path: &str,
+    md_base_path: &str,
+    public_path: &str,
+    tera: &Tera,
+    context: Context,
+) -> Vec<MarkdownMetadata> {
+    let mut md_metas: Vec<MarkdownMetadata> = Vec::new();
+    let dir = match fs::read_dir(md_path) {
         Ok(dir) => dir,
         Err(e) => {
             error!("read_dir error: {}", e);
-            return md_paths;
+            return md_metas;
         }
     };
     for entry in dir {
@@ -34,107 +98,122 @@ pub fn scan_mdfiles(md_base_path: &str) -> Vec<PathBuf> {
             }
         };
         let path = entry.path();
+        let path_str = path.to_str().unwrap();
+        let md_pinyin_relative_path = str::topinyin(&md_relative_path(path_str, md_base_path));
+        let context = context.clone();
         if path.is_dir() {
-            let vec = scan_mdfiles(path.to_str().unwrap());
-            md_paths.extend(vec);
+            //创建文件夹
+            create_html_dir(&md_pinyin_relative_path, public_path);
+            let vec = handle_md(path_str, md_base_path, public_path, tera, context);
+            md_metas.extend(vec);
         } else if path.is_file() {
             if let Some(ext) = path.extension() {
+                let file = md_path_to_html_path(&md_pinyin_relative_path, public_path);
                 if ext == "md" {
-                    md_paths.push(path);
+                    //md转html
+                    let html_file = format!("{}.html", &file.trim_end_matches(".md"));
+                    md_metas.push(md_to_html(
+                        "content.html",
+                        path_str,
+                        &html_file,
+                        context,
+                        public_path,
+                        tera,
+                    ));
+                } else {
+                    //复制文件
+                    info!("copy file: {} --> {}", path_str, file);
+                    match fs::copy(path, &file) {
+                        Ok(_) => {
+                            info!("copy file success: {}", file);
+                        }
+                        Err(e) => {
+                            error!("copy file error: {}", e);
+                        }
+                    }
                 }
             }
         }
     }
-    md_paths
+    md_metas
 }
 
-/// 生成html文件
-pub async fn handle_mdfiles(md_paths: Vec<PathBuf>, conf: &Conf) -> Result<(), tera::Error> {
-    let tera = match tera::Tera::new(&format!(
-        "{}/**/*",
-        conf.template_path.trim_end_matches('/')
-    )) {
-        Ok(tera) => tera,
-        Err(e) => {
-            error!("tera error, {}", e);
-            return Err(e);
-        }
-    };
+/// 获取markdown文件相对路径
+///
+/// md_path: markdown实际文件路径
+///
+/// md_base_path: markdown文件夹根路径（配置中路径）
+fn md_relative_path(md_path: &str, md_base_path: &str) -> String {
+    md_path
+        .trim_start_matches(md_base_path.trim_end_matches('/').trim_end_matches('\\'))
+        .trim_start_matches(MAIN_SEPARATOR_STR)
+        .trim_end_matches(MAIN_SEPARATOR_STR)
+        .to_string()
+}
 
-    let md_base_path = format!(
-        "{}{}",
-        Path::new(&conf.markdown_path)
-            .to_str()
-            .unwrap()
-            .trim_end_matches('/'),
-        MAIN_SEPARATOR_STR
-    );
-    //生成html文件
-    md_paths.iter().for_each(|md_path| {
-        let md_path_str = md_path.to_str().unwrap();
-        let (pinyin_filename, md_content) = match get_md_data(md_path) {
-            Some((pinyin_filename, md_content)) => (pinyin_filename, md_content),
-            None => {
-                error!("get_md_data error: {}", md_path_str);
-                return;
-            }
-        };
-        info!("{} --> pinyin_filename: {}", md_path_str, pinyin_filename);
-        let mut html_path =
-            Path::new(&conf.public_path).join(md_path_str.trim_start_matches(&md_base_path));
-        html_path.set_file_name(format!("{}.html", pinyin_filename));
-        let html_file_path = str::topinyin(html_path.to_str().unwrap());
-        info!("{} --> map html: {}", md_path_str, html_file_path);
-
-        let mut context = Context::new();
-        let html_content = markdown::to_html(&md_content);
-        context.insert("title", &conf.title);
-        context.insert("keyword", &conf.keyword);
-        context.insert("content", &html_content);
-        write_html(context, "content.html", &html_file_path, &tera);
-    });
-    //生成首页
-    let mut context = Context::new();
-    context.insert("title", &conf.title);
-    context.insert("keyword", &conf.keyword);
-    //context.insert("content", &html_content);
-    write_html(
-        context,
-        "index.html",
-        &format!("{}/index.html", &conf.public_path),
-        &tera,
-    );
-
-    //复制assets文件夹
-    let assets_path = Path::new(&conf.template_path).join("assets");
-    let assets_path_str = assets_path.to_str().unwrap();
-    // let public_assets_path = Path::new(&conf.public_path);
-    // let public_assets_path_str = public_assets_path.to_str().unwrap();
-    info!("copy assets: {} --> {}", assets_path_str, conf.public_path);
-    //fs::copy(assets_path_str, &conf.public_path).unwrap();
-    match fs_extra::dir::copy(
-        assets_path_str,
-        &conf.public_path,
-        &fs_extra::dir::CopyOptions::new().overwrite(true),
-    ) {
-        Ok(_) => {
-            info!("copy assets success");
-        }
-        Err(e) => {
-            error!("copy assets error: {}", e);
-        }
+fn create_html_dir(md_relative_dir: &str, public_path: &str) -> String {
+    let html_dir = md_path_to_html_path(md_relative_dir, public_path);
+    if !Path::new(&html_dir).exists() {
+        fs::create_dir_all(&html_dir).unwrap();
     }
-    Ok(())
+    html_dir
 }
 
-pub fn get_md_data(md_file: &Path) -> Option<(String, String)> {
-    Some((
-        str::topinyin(md_file.file_stem()?.to_str()?),
-        read_to_string(md_file).ok()?,
-    ))
+fn md_path_to_html_path(md_relative_path: &str, public_path: &str) -> String {
+    format!(
+        "{}{}{}",
+        public_path.trim_end_matches('/').trim_end_matches('\\'),
+        MAIN_SEPARATOR_STR,
+        md_relative_path
+    )
 }
 
-pub fn write_html(context: Context, template_name: &str, html_file: &str, tera: &Tera) {
+fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
+    let md = md_path.as_ref();
+    let content = read_to_string(md).ok()?;
+    let html_content = markdown::to_html(&content);
+    //截取html内容的前200个字符作为描述
+    let description = html_content
+        .chars()
+        .take(200)
+        .collect::<String>()
+        .replace("\n", "");
+    Some(MarkdownMetadata {
+        title: md.file_stem()?.to_str()?.to_string(),
+        date: "".to_string(),
+        categories: Vec::new(),
+        description: description,
+        content: content,
+        path: md.to_str()?.to_string(),
+        html_url: "".to_string(),
+        html_path: "".to_string(),
+        html_content: html_content,
+    })
+}
+
+fn tera(template_path: &str) -> Result<Tera, tera::Error> {
+    tera::Tera::new(&format!("{}/**/*", template_path.trim_end_matches('/')))
+}
+
+fn md_to_html(
+    template_name: &str,
+    md_file: &str,
+    html_file: &str,
+    mut context: Context,
+    public_path: &str,
+    tera: &Tera,
+) -> MarkdownMetadata {
+    let md_metadata = md_metadata(&md_file)
+        .unwrap()
+        .html_path(html_file.to_string())
+        .html_url(html_file.trim_start_matches(public_path).replace("\\", "/"));
+    context.insert("content", &md_metadata.html_content);
+    info!("render {} --> {}", md_file, html_file);
+    write_html(template_name, &html_file, context, tera);
+    md_metadata
+}
+
+fn write_html(template_name: &str, html_file: &str, context: Context, tera: &Tera) {
     info!("render html: {}", html_file);
 
     let content = match tera.render(template_name, &context) {
@@ -144,12 +223,6 @@ pub fn write_html(context: Context, template_name: &str, html_file: &str, tera: 
             return;
         }
     };
-    debug!("html_file_path: {}, content: {}", html_file, content);
-    //判断文件夹是否存在
-    let html_file_path = Path::new(html_file);
-    if !html_file_path.parent().unwrap().exists() {
-        fs::create_dir_all(Path::new(html_file).parent().unwrap()).unwrap();
-    }
 
     match fs::write(html_file, content) {
         Ok(_) => {
@@ -158,5 +231,74 @@ pub fn write_html(context: Context, template_name: &str, html_file: &str, tera: 
         Err(e) => {
             error!("write html error: {}", e);
         }
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct MarkdownMetadata {
+    ///标题
+    pub title: String,
+    ///时间
+    pub date: String,
+    //pub tags: Vec<String>,
+    ///分类
+    pub categories: Vec<String>,
+    ///描述
+    pub description: String,
+    ///内容
+    pub content: String,
+    ///文件路径
+    pub path: String,
+    ///访问URL
+    pub html_url: String,
+    ///html文件路径
+    pub html_path: String,
+    ///html内容
+    pub html_content: String,
+}
+impl MarkdownMetadata {
+    pub fn title(mut self, title: String) -> Self {
+        self.title = title;
+        self
+    }
+
+    pub fn date(mut self, date: String) -> Self {
+        self.date = date;
+        self
+    }
+
+    pub fn categories(mut self, categories: Vec<String>) -> Self {
+        self.categories = categories;
+        self
+    }
+
+    pub fn description(mut self, description: String) -> Self {
+        self.description = description;
+        self
+    }
+
+    pub fn content(mut self, content: String) -> Self {
+        self.content = content;
+        self
+    }
+
+    pub fn path(mut self, path: String) -> Self {
+        self.path = path;
+        self
+    }
+
+    pub fn html_url(mut self, html_url: String) -> Self {
+        self.html_url = html_url;
+        self
+    }
+
+    pub fn html_path(mut self, html_path: String) -> Self {
+        self.html_path = html_path;
+        self
+    }
+
+    pub fn html_content(mut self, html_content: String) -> Self {
+        self.html_content = html_content;
+        self
     }
 }

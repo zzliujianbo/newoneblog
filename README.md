@@ -35,9 +35,7 @@ curl xxx
     //模板路径
     "template_path": "./template",
     //public目录
-    "public_path": "./public",
-    //关于我们
-    "about": "newoneblog是一个基于rust开发的博客程序，实现了类似于github pages的功能。"
+    "public_path": "./public"
 }
 
 ```
