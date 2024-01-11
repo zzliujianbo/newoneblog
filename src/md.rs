@@ -37,7 +37,6 @@ pub async fn run() {
         &tera,
         context.clone(),
     );
-    info!("md_metas: {:?}", md_metas);
 
     //生成首页
     let mut index_context = context.clone();

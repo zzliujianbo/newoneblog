@@ -21,8 +21,6 @@ pub struct Conf {
     pub template_path: String,
     /// md转换为html文件存放路径
     pub public_path: String,
-    /// 关于我们md文件存放路径
-    pub about_md_path: String,
 }
 
 impl Conf {
