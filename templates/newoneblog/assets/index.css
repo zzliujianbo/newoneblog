@@ -1,8 +1,6 @@
 .article {
-    border-bottom: 2px solid #eee;
+    border-bottom: 1px solid #eee;
 }
-
-.article h2 {}
 
 .article p {
     text-indent: 2em;
@@ -19,4 +17,8 @@
     text-align: right;
     margin-right: 20px;
     margin-bottom: 5px;
+}
+
+.article:last-child {
+    border-bottom: none;
 }

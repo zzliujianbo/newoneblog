@@ -6,15 +6,21 @@ body {
     font-family: PingFang SC, -apple-system, SF UI Text, Lucida Grande, STheiti, Microsoft YaHei, sans-serif;
     outline: none;
     -webkit-text-size-adjust: none;
+    padding-top: 20px;
 }
 
 #nav {
     text-align: right;
     font-size: 22px;
     margin-bottom: 30px;
+    background-color: #6235e7;
+    border-radius: 5px;
+    height: 50px;
 }
 
 #nav ul {
+    padding: 10px;
+    margin-left: 0;
     list-style-type: none;
 }
 
@@ -23,6 +29,18 @@ body {
     margin-left: 20px;
 }
 
+#nav ul li a {
+    color: #fff;
+}
+
+#nav ul li.blog-brand {
+    text-align: left;
+    float: left;
+    margin-left: 0;
+    font-size: 26px;
+    font-weight: bold;
+    color: #fff;
+}
 
 a.link {
     text-decoration: none;
@@ -36,4 +54,27 @@ a.link:hover {
     background-color: #6235e7;
     padding: 0;
     margin: 0;
+}
+
+#footer {
+    border-top: 2px solid #dfdfdf;
+    text-align: center;
+    font-size: 12px;
+    padding-top: 20px;
+    color: #999;
+    margin-bottom: 30px;
+}
+
+#footer ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#footer ul li {
+    display: inline;
+}
+
+#footer ul li a {
+    color: #6235e7;
 }
