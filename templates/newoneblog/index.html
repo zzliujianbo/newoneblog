@@ -8,26 +8,20 @@
 {% endblock head %}
 
 {% block content %}
-<div id="nav">
-    <ul>
-        <li>
-            <a href="/">首页</a>
-        </li>
-        <li>
-            <a href="{{about_url | safe}}">关于</a>
-        </li>
-    </ul>
-
-</div>
 {% for md in md_metas %}
 {%if md.title != 'about'%}
 <div class="article">
-    <b>
-        <a href="{{md.html_url | safe}}">{{md.title}}</a>
-    </b>
+    <h2>
+        <a class="link" href="{{md.html_url | safe}}">{{md.title}}</a>
+    </h2>
     <p>
         {{md.description}}
     </p>
+    <div class="time-text">
+        {% if md.date %}
+        {{ md.date | date }}
+        {% endif %}
+    </div>
 </div>
 {%endif%}
 {% endfor %}

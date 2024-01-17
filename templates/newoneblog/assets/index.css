@@ -1,20 +1,22 @@
-#content {
-    width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
+.article {
+    border-bottom: 2px solid #eee;
 }
 
-#nav {
-    text-align: right;
-    font-size: 22px;
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-
-.article .title {
-    font-size: 22px;
-}
+.article h2 {}
 
 .article p {
-    font-size: 18px;
+    text-indent: 2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.article .time-text {
+    color: #999;
+    font-size: 12px;
+    text-align: right;
+    margin-right: 20px;
+    margin-bottom: 5px;
 }

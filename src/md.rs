@@ -1,12 +1,15 @@
+use crate::str;
+use crate::{
+    conf::{Conf, CONF},
+    str::remove_html_tag,
+};
+use chrono::{DateTime, Local, NaiveDateTime};
+use log::{debug, error, info};
+use serde::Serialize;
 use std::{
     fs::{self, read_to_string},
     path::{Path, MAIN_SEPARATOR_STR},
 };
-
-use crate::conf::{Conf, CONF};
-use crate::str;
-use log::{debug, error, info};
-use serde::Serialize;
 use tera::{Context, Tera};
 
 /// markdown to html
@@ -29,6 +32,7 @@ pub async fn run() {
     let mut context = Context::new();
     context.insert("title", &conf.title);
     context.insert("keyword", &conf.keyword);
+    context.insert("about_url", "/about.html");
 
     let md_metas = handle_md(
         &conf.markdown_path,
@@ -41,15 +45,12 @@ pub async fn run() {
     //生成首页
     let mut index_context = context.clone();
     index_context.insert("md_metas", &md_metas);
-    //链接about页面
-    index_context.insert("about_url", "about.html");
     write_html(
         "index.html",
         &format!("{}/index.html", &conf.public_path),
         index_context,
         &tera,
     );
-    
 
     //复制assets文件夹
     let assets_path = Path::new(&conf.template_path).join("assets");
@@ -169,19 +170,32 @@ fn md_path_to_html_path(md_relative_path: &str, public_path: &str) -> String {
 
 fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
     let md = md_path.as_ref();
+    let file_metadata = fs::metadata(md).ok()?;
     let content = read_to_string(md).ok()?;
     let html_content = markdown::to_html(&content);
     //截取html内容的前200个字符作为描述
     let description = html_content
         .chars()
-        .take(200)
+        .take(500)
         .collect::<String>()
         .replace("\n", "");
+    let date = match file_metadata.created() {
+        Ok(date) => {
+            let date: DateTime<Local> = date.into();
+            Some(date.naive_local())
+        }
+
+        Err(e) => {
+            error!("get file created time error: {}", e);
+            None
+        }
+    };
+
     Some(MarkdownMetadata {
         title: md.file_stem()?.to_str()?.to_string(),
-        date: "".to_string(),
+        date: date,
         categories: Vec::new(),
-        description: description,
+        description: remove_html_tag(&description, "").to_string(),
         content: content,
         path: md.to_str()?.to_string(),
         html_url: "".to_string(),
@@ -238,7 +252,7 @@ pub struct MarkdownMetadata {
     ///标题
     pub title: String,
     ///时间
-    pub date: String,
+    pub date: Option<NaiveDateTime>,
     //pub tags: Vec<String>,
     ///分类
     pub categories: Vec<String>,
@@ -261,7 +275,7 @@ impl MarkdownMetadata {
         self
     }
 
-    pub fn date(mut self, date: String) -> Self {
+    pub fn date(mut self, date: Option<NaiveDateTime>) -> Self {
         self.date = date;
         self
     }

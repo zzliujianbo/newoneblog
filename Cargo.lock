@@ -153,6 +153,7 @@ dependencies = [
  "iana-time-zone",
  "js-sys",
  "num-traits",
+ "serde",
  "wasm-bindgen",
  "windows-targets",
 ]
@@ -737,6 +738,7 @@ dependencies = [
 name = "newoneblog"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "fs_extra",
  "lazy_static",
  "log",
@@ -745,6 +747,7 @@ dependencies = [
  "markdown",
  "pinyin",
  "poem",
+ "regex",
  "serde",
  "serde_json",
  "tera",

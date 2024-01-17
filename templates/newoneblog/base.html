@@ -2,12 +2,16 @@
 <html lang="zh-CN">
 
 <head>
+    <link rel="stylesheet" href="https://jez.io/pandoc-markdown-css-theme/css/theme.css" />
+    <link rel="stylesheet" href="https://jez.io/pandoc-markdown-css-theme/css/skylighting-solarized-theme.css" />
+    <link rel="stylesheet" href="/assets/base.css" />
     {% block head %}
     <title>{% block title %}{% endblock title %}</title>
     {% endblock head %}
 </head>
 
 <body>
+    {% include "nav.html" %}
     <div id="content">{% block content %}{% endblock content %}</div>
     <div id="footer">
         {% block footer %}
