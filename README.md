@@ -1,55 +1,40 @@
 # newoneblog
-newoneblog是一个基于rust开发的博客程序，实现了类似于`github pages`的功能。
 
-主要功能：
+newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。并提供 web 静态文件服务。
 
-1、自动将markdown目录转义为html静态文件。
-
-2、静态文件模板功能。
-
-3、web服务。
-
-newoneblog主要基于poem、xx开发。
-
-依赖内容
-
-# 1、使用方法
-## 1.1、安装
-``` sh
-curl xxx
-```
 ## 1.2、创建配置文件
-``` json
-{
-    //绑定的服务器ip
-    "server_ip": "",
-    //绑定的服务器端口
-    "server_port": 8080,
-    //title
-    "title": "newoneblog",
-    //keyword
-    "keyword": "博客|blog",
-    //markdown目录
-    "markdown_dir": "./markdown",
-    //统计脚本（考虑脚本方式）
-    //模板路径
-    "template_path": "./template",
-    //public目录
-    "public_path": "./public"
-}
 
+```json
+{
+  "server_ip": "127.0.0.1",
+  "server_port": 3000,
+  "title": "newoneblog",
+  "keywords": "rust, blog, newoneblog, markdown",
+  "description": "一个通过markdown生成博客的程序",
+  "markdown_path": "./markdown",
+  "template_path": "./templates/newoneblog",
+  "public_path": "./public"
+}
 ```
+
+| 配置字段      | 描述                 |
+| ------------- | -------------------- |
+| server_ip     | web 服务 ip 地址     |
+| server_port   | web 服务端口         |
+| title         | 网站标题             |
+| keyword       | 网站关键字           |
+| markdown_dir  | markdown 目录        |
+| template_path | 网站模板目录         |
+| public_path   | 生成的 html 存放目录 |
+
 ## 1.3、启动
 
-运行后会根据配置的markdown目录，自动解析目录下的所有md文件。并缓存到public目录下。
-public目录为主要对外提供可访问目录。
-
-
-## 1.4、重新缓存
-当md文件有新的更新后，调用xx接口并加上密钥重新生成缓存。
-
-# 2、开发
-``` rust
-cargo build
+```shell
+cargo run
 ```
-编译完成之后
+
+运行后会根据 markdown 和 template 目录，生成 html 文件到 public 目录下。
+
+访问 `http://127.0.0.1:3000` 查看网站。
+
+![网站图片](website.png)

@@ -31,7 +31,8 @@ pub async fn run() {
 
     let mut context = Context::new();
     context.insert("title", &conf.title);
-    context.insert("keyword", &conf.keyword);
+    context.insert("keywords", &conf.keywords);
+    context.insert("description", &conf.description);
     context.insert("about_url", "/about.html");
 
     let md_metas = handle_md(
@@ -205,7 +206,7 @@ fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
 }
 
 fn tera(template_path: &str) -> Result<Tera, tera::Error> {
-    tera::Tera::new(&format!("{}/**/*", template_path.trim_end_matches('/')))
+    tera::Tera::new(&format!("{}/**/*.html", template_path.trim_end_matches('/')))
 }
 
 fn md_to_html(

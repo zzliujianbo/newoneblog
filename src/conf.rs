@@ -14,7 +14,9 @@ pub struct Conf {
     /// 网站标题
     pub title: String,
     /// 网站关键字
-    pub keyword: String,
+    pub keywords: String,
+    /// 网站描述
+    pub description: String,
     /// md文件存放路径
     pub markdown_path: String,
     /// 网站模板路径

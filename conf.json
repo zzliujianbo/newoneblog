@@ -2,7 +2,8 @@
     "server_ip": "127.0.0.1",
     "server_port": 3000,
     "title": "newoneblog",
-    "keyword": "rust|blog|newoneblog",
+    "keywords": "rust, blog, newoneblog, markdown",
+    "description": "一个通过markdown生成博客的程序",
     "markdown_path": "./markdown",
     "template_path": "./templates/newoneblog",
     "public_path": "./public"
