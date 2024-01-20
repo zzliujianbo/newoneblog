@@ -2,7 +2,7 @@
 
 newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。并提供 web 静态文件服务。
 
-## 1.2、创建配置文件
+## 1、创建配置文件
 
 ```json
 {
@@ -27,7 +27,7 @@ newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。�
 | template_path | 网站模板目录         |
 | public_path   | 生成的 html 存放目录 |
 
-## 1.3、启动
+## 2、启动
 
 ```shell
 cargo run
