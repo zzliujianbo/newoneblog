@@ -13,8 +13,9 @@ body {
     text-align: right;
     font-size: 22px;
     margin-bottom: 30px;
-    background-color: #6235e7;
-    border-radius: 5px;
+    /* background-color: #6235e7; */
+    /* border-radius: 5px; */
+    border-bottom: 2px solid #6235e7;
     height: 50px;
 }
 
@@ -30,7 +31,17 @@ body {
 }
 
 #nav ul li a {
-    color: #fff;
+    /* color: #fff; */
+    color: #6235e7;
+}
+
+#nav ul li a:hover {
+    /* color: #fff; */
+    color: #8bd450;
+    /* background-color: #6235e7; */
+    background-color: #3f6d4e;
+    padding: 0;
+    margin: 0;
 }
 
 #nav ul li.blog-brand {
@@ -39,19 +50,21 @@ body {
     margin-left: 0;
     font-size: 26px;
     font-weight: bold;
-    color: #fff;
+    /* color: #fff; */
 }
 
 a.link {
     text-decoration: none;
-    color: #6235e7;
+    /* color: #6235e7; */
+    color: #1d1a2f;
     padding: 0;
     margin: 0;
 }
 
 a.link:hover {
-    color: #fff;
-    background-color: #6235e7;
+    color: #8bd450;
+    /* background-color: #6235e7; */
+    background-color: #3f6d4e;
     padding: 0;
     margin: 0;
 }
@@ -77,4 +90,11 @@ a.link:hover {
 
 #footer ul li a {
     color: #6235e7;
+}
+
+#footer ul li a:hover {
+    color: #8bd450;
+    background-color: #3f6d4e;
+    padding: 0;
+    margin: 0;
 }

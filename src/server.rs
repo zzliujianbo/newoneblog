@@ -9,7 +9,7 @@ pub async fn run() -> Result<(), std::io::Error> {
     info!("Starting server {} ...", addr);
     let app = Route::new().nest(
         "/",
-        StaticFilesEndpoint::new(conf.public_path.clone()).show_files_listing(), // Use the cloned public_path
+        StaticFilesEndpoint::new(conf.public_path.clone()).index_file("index.html"), // Use the cloned public_path
     );
     Server::new(TcpListener::bind(addr)).run(app).await
 }
