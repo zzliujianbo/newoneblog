@@ -99,7 +99,18 @@ fn handle_md(
             }
         };
         let path = entry.path();
-        let path_str = path.to_str().unwrap();
+        let path_str = &path.to_str().unwrap().replace('\\', "/");
+        let is_ignore = CONF
+            .get()
+            .unwrap()
+            .ignore_markdown_path
+            .iter()
+            .any(|ignore_path| path_str.starts_with(ignore_path));
+        if is_ignore {
+            info!("ignore path: {}", path_str);
+            continue;
+        }
+        debug!("for path: {}", path_str);
         let md_pinyin_relative_path = str::topinyin(&md_relative_path(path_str, md_base_path));
         let context = context.clone();
         if path.is_dir() {
@@ -147,8 +158,10 @@ fn handle_md(
 fn md_relative_path(md_path: &str, md_base_path: &str) -> String {
     md_path
         .trim_start_matches(md_base_path.trim_end_matches('/').trim_end_matches('\\'))
-        .trim_start_matches(MAIN_SEPARATOR_STR)
-        .trim_end_matches(MAIN_SEPARATOR_STR)
+        .trim_start_matches('/')
+        .trim_end_matches('/')
+        // .trim_start_matches(MAIN_SEPARATOR_STR)
+        // .trim_end_matches(MAIN_SEPARATOR_STR)
         .to_string()
 }
 
@@ -162,9 +175,9 @@ fn create_html_dir(md_relative_dir: &str, public_path: &str) -> String {
 
 fn md_path_to_html_path(md_relative_path: &str, public_path: &str) -> String {
     format!(
-        "{}{}{}",
+        "{}/{}",
         public_path.trim_end_matches('/').trim_end_matches('\\'),
-        MAIN_SEPARATOR_STR,
+        //MAIN_SEPARATOR_STR,
         md_relative_path
     )
 }
@@ -206,7 +219,10 @@ fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
 }
 
 fn tera(template_path: &str) -> Result<Tera, tera::Error> {
-    tera::Tera::new(&format!("{}/**/*.html", template_path.trim_end_matches('/')))
+    tera::Tera::new(&format!(
+        "{}/**/*.html",
+        template_path.trim_end_matches('/')
+    ))
 }
 
 fn md_to_html(

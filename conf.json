@@ -6,5 +6,8 @@
     "description": "一个通过markdown生成博客的程序",
     "markdown_path": "./markdown",
     "template_path": "./templates/newoneblog",
-    "public_path": "./public"
+    "public_path": "./public",
+    "ignore_markdown_path": [
+        "./markdown/ignore-markdown"
+    ]
 }

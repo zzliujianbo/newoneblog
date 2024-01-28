@@ -13,19 +13,21 @@ newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。�
   "description": "一个通过markdown生成博客的程序",
   "markdown_path": "./markdown",
   "template_path": "./templates/newoneblog",
-  "public_path": "./public"
+  "public_path": "./public",
+  "ignore_markdown_path": []
 }
 ```
 
-| 配置字段      | 描述                 |
-| ------------- | -------------------- |
-| server_ip     | web 服务 ip 地址     |
-| server_port   | web 服务端口         |
-| title         | 网站标题             |
-| keyword       | 网站关键字           |
-| markdown_dir  | markdown 目录        |
-| template_path | 网站模板目录         |
-| public_path   | 生成的 html 存放目录 |
+| 配置字段             | 描述                         |
+| -------------------- | ---------------------------- |
+| server_ip            | web 服务 ip 地址             |
+| server_port          | web 服务端口                 |
+| title                | 网站标题                     |
+| keyword              | 网站关键字                   |
+| markdown_dir         | markdown 目录                |
+| template_path        | 网站模板目录                 |
+| public_path          | 生成的 html 存放目录         |
+| ignore_markdown_path | 忽略的 markdown 文件或者路径 |
 
 ## 2、启动
 

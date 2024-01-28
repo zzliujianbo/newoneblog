@@ -23,6 +23,8 @@ pub struct Conf {
     pub template_path: String,
     /// md转换为html文件存放路径
     pub public_path: String,
+    /// 忽略的 markdown 文件或者路径
+    pub ignore_markdown_path: Vec<String>,
 }
 
 impl Conf {
