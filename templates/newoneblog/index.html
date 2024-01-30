@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block head %}
 {{ super() }}
-<link rel="stylesheet" href="/assets/css/index.css" />
+<link rel="stylesheet" href="/assets/css/index.css?{{build_md_time}}" />
 {% endblock head %}
 
 {% block content %}
@@ -15,13 +15,15 @@
         <a class="link" href="{{md.html_url | safe}}">{{md.title}}</a>
     </h2>
     <p>
-        {{md.description}}
+        <a class="link-nostyle" href="{{md.html_url | safe}}">
+            {{md.description}}
+        </a>
     </p>
-    <!-- <div class="time-text">
-        {% if md.date %}
-        {{ md.date | date }}
+    <div class="time-text">
+        {% if md.update_date %}
+        {{ md.update_date | date }}
         {% endif %}
-    </div> -->
+    </div>
 </div>
 {%endif%}
 {% endfor %}

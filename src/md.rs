@@ -1,11 +1,12 @@
-use crate::str;
 use crate::{
     conf::{Conf, CONF},
     str::remove_html_tag,
 };
+use crate::{md, str};
 use chrono::{DateTime, Local, NaiveDateTime};
 use log::{debug, error, info};
 use serde::Serialize;
+use std::process::Command;
 use std::{
     fs::{self, read_to_string},
     path::{Path, MAIN_SEPARATOR_STR},
@@ -34,14 +35,20 @@ pub async fn run() {
     context.insert("keywords", &conf.keywords);
     context.insert("description", &conf.description);
     context.insert("about_url", "/about.html");
+    context.insert(
+        "build_md_time",
+        &Local::now().format("%Y%m%d%H%M%S").to_string(),
+    );
 
-    let md_metas = handle_md(
+    let mut md_metas = handle_md(
         &conf.markdown_path,
         &conf.markdown_path,
         &conf.public_path,
         &tera,
         context.clone(),
     );
+    md_metas.sort_by_key(|k| k.update_date);
+    md_metas.reverse();
 
     //生成首页
     let mut index_context = context.clone();
@@ -184,6 +191,7 @@ fn md_path_to_html_path(md_relative_path: &str, public_path: &str) -> String {
 
 fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
     let md = md_path.as_ref();
+    let md_str = md.to_str()?;
     let file_metadata = fs::metadata(md).ok()?;
     let content = read_to_string(md).ok()?;
     let html_content = markdown::to_html(&content);
@@ -193,21 +201,43 @@ fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
         .take(500)
         .collect::<String>()
         .replace("\n", "");
-    let date = match file_metadata.created() {
-        Ok(date) => {
-            let date: DateTime<Local> = date.into();
-            Some(date.naive_local())
-        }
+    // let date = match file_metadata.created() {
+    //     Ok(date) => {
+    //         let date: DateTime<Local> = date.into();
+    //         Some(date.naive_local())
+    //     }
 
+    //     Err(e) => {
+    //         error!("get file created time error: {}", e);
+    //         None
+    //     }
+    // };
+
+    //获取markdown文件最后的修改时间
+    //https://blog.wayneshao.com/posts/9412.html
+    //https://github.com/Dream4ever/Knowledge-Base/issues/69
+    let git_date = Command::new("git")
+        .args(["log", "-1", "--pretty=format:\"%aI\"", "--", md_str])
+        .output();
+    let date = match git_date {
+        Ok(data) => {
+            let date = String::from_utf8(data.stdout).unwrap();
+            debug!("{} --> git update_time: {}", md_str, date);
+            Some(
+                DateTime::parse_from_rfc3339(&date.trim_matches('"'))
+                    .unwrap()
+                    .naive_local(),
+            )
+        }
         Err(e) => {
-            error!("get file created time error: {}", e);
+            error!("get file updated time error: {}", e);
             None
         }
     };
 
     Some(MarkdownMetadata {
         title: md.file_stem()?.to_str()?.to_string(),
-        date: date,
+        update_date: date,
         categories: Vec::new(),
         description: remove_html_tag(&description, "").to_string(),
         content: content,
@@ -269,7 +299,7 @@ pub struct MarkdownMetadata {
     ///标题
     pub title: String,
     ///时间
-    pub date: Option<NaiveDateTime>,
+    pub update_date: Option<NaiveDateTime>,
     //pub tags: Vec<String>,
     ///分类
     pub categories: Vec<String>,
@@ -292,8 +322,8 @@ impl MarkdownMetadata {
         self
     }
 
-    pub fn date(mut self, date: Option<NaiveDateTime>) -> Self {
-        self.date = date;
+    pub fn update_date(mut self, update_time: Option<NaiveDateTime>) -> Self {
+        self.update_date = update_time;
         self
     }
 

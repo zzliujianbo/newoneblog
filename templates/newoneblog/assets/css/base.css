@@ -69,6 +69,13 @@ a.link:hover {
     margin: 0;
 }
 
+a.link-nostyle {
+    text-decoration: none;
+    color: #1d1a2f;
+    padding: 0;
+    margin: 0;
+}
+
 #footer {
     border-top: 2px solid #dfdfdf;
     text-align: center;
