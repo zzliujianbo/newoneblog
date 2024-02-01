@@ -217,13 +217,27 @@ fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
     //获取markdown文件最后的修改时间
     //https://blog.wayneshao.com/posts/9412.html
     //https://github.com/Dream4ever/Knowledge-Base/issues/69
-    let git_date = Command::new("git")
-        .args(["log", "-1", "--pretty=format:\"%aI\"", "--", md_str])
-        .output();
+    let conf = CONF.get().unwrap();
+    let args = [
+        "-C",
+        &conf.markdown_path,
+        "log",
+        "-1",
+        "--pretty=format:\"%aI\"",
+        "--",
+        &md_str
+            .trim_start_matches(&conf.markdown_path)
+            .trim_start_matches('/'),
+    ];
+    let git_date = Command::new("git").args(&args).output();
+    debug!("{} --> git {:?} out_put:{:?}", md_str, args, git_date);
     let date = match git_date {
         Ok(data) => {
             let date = String::from_utf8(data.stdout).unwrap();
             debug!("{} --> git update_time: {}", md_str, date);
+            if date.is_empty() {
+                return None;
+            }
             Some(
                 DateTime::parse_from_rfc3339(&date.trim_matches('"'))
                     .unwrap()
