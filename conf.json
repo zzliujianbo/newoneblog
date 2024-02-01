@@ -9,5 +9,6 @@
     "public_path": "./public",
     "ignore_markdown_path": [
         "./markdown/ignore-markdown"
-    ]
+    ],
+    "footer_html": "<div>xx备案</div>"
 }

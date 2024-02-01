@@ -14,7 +14,8 @@ newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。�
   "markdown_path": "./markdown",
   "template_path": "./templates/newoneblog",
   "public_path": "./public",
-  "ignore_markdown_path": []
+  "ignore_markdown_path": [],
+  "footer_html": "<div>xx备案</div>"
 }
 ```
 
@@ -28,6 +29,7 @@ newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。�
 | template_path        | 网站模板目录                 |
 | public_path          | 生成的 html 存放目录         |
 | ignore_markdown_path | 忽略的 markdown 文件或者路径 |
+| ignore_markdown_path | 底部html代码                 |
 
 ## 2、启动
 

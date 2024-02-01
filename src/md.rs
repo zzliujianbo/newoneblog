@@ -35,6 +35,7 @@ pub async fn run() {
     context.insert("keywords", &conf.keywords);
     context.insert("description", &conf.description);
     context.insert("about_url", "/about.html");
+    context.insert("footer_html", &conf.footer_html);
     context.insert(
         "build_md_time",
         &Local::now().format("%Y%m%d%H%M%S").to_string(),
