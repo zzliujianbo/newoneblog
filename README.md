@@ -39,9 +39,19 @@ newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。�
 ```shell
 cargo run
 ```
-
+或者
+```
+cargo watch -x "run --bin newoneblog"
+```
 运行后会根据 markdown 和 template 目录，生成 html 文件到 public 目录下。
 
 访问 `http://127.0.0.1:3000` 查看网站。
 
 ![网站图片](website.png)
+
+## 3、编译
+
+交叉编译linux：
+``` shell
+cargo build --release --target=x86_64-unknown-linux-musl -vv
+```
