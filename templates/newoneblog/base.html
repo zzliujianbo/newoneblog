@@ -2,8 +2,6 @@
 <html lang="zh-CN">
 
 <head>
-    <link rel="stylesheet" href="/assets/css/theme.css?{{build_md_time}}" />
-    <link rel="stylesheet" href="/assets/css/skylighting-solarized-theme.css?{{build_md_time}}" />
     <link rel="stylesheet" href="/assets/css/base.css?{{build_md_time}}" />
     <meta name="keywords" content="{{keywords}}">
     <meta name="description" content="{{description}}">
@@ -17,18 +15,24 @@
     {% include "nav.html" %}
     <div id="content">{% block content %}{% endblock content %}</div>
     <div id="footer">
-        <div>
+        <div class="row">
             <ul>
                 <li>
-                    <a href="/about.html">关于我们</a>
+                    <a href="/about.html">关于newoneblog</a>
                 </li>
-                <li>|</li>
+                <!-- <li>|</li>
                 <li>
-                    <a target="_blank" href="https://github.com/zzliujianbo/newoneblog">newoneblog构建</a>
-                </li>
+                </li> -->
             </ul>
         </div>
-        {{ footer_html | safe }}
+        <div class="row">
+            <p>
+                Powered by <a target="_blank" href="https://github.com/zzliujianbo/newoneblog">newoneblog</a>
+            </p>
+        </div>
+        <div class="row">
+            {{ footer_html | safe }}
+        </div>
         {% block footer %}
         {% endblock footer %}
     </div>

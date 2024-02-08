@@ -1,3 +1,21 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    /* font-family: 'Open Sans', sans-serif; */
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    padding: 0;
+    line-height: 1.1;
+}
+
+h1 {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
 p {
-    text-indent: 2em;
+    font-size: 17px;
 }

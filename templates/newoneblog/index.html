@@ -11,15 +11,14 @@
 {% for md in md_metas %}
 {%if md.title != 'about'%}
 <div class="article">
-    <h2>
-        <a class="link" href="{{md.html_url | safe}}">{{md.title}}</a>
-    </h2>
+    <h4>
+        <a class="title" href="{{md.html_url | safe}}">{{md.title}}</a>
+    </h4>
     <p>
-        <a class="link-nostyle" href="{{md.html_url | safe}}">
-            {{md.description}}
-        </a>
+        {{md.description}}
     </p>
-    <div class="time-text">
+    <div class="more">
+        <a href="{{md.html_url | safe}}">阅读全文</a>
         {% if md.update_date %}
         {{ md.update_date | date }}
         {% endif %}

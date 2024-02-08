@@ -3,7 +3,7 @@ use std::env;
 
 fn main() {
     //拷贝资源文件到编译目录
-    println!("cargo:rerun-if-changed=templates/*");
+    //println!("cargo:rerun-if-changed=templates/*");
     println!("cargo:rerun-if-changed=conf.json");
     //let out_dir = env::var_os("OUT_DIR").unwrap();
     //println!("out_dir: {:?}", out_dir);
