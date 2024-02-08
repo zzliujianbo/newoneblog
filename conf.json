@@ -8,6 +8,8 @@
     "template_path": "./templates/newoneblog",
     "public_path": "./public",
     "ignore_markdown_path": [
+        "./markdown/.git",
         "./markdown/ignore-markdown"
-    ]
+    ],
+    "footer_html": "<div>xx备案</div>"
 }

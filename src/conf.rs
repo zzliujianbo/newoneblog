@@ -25,6 +25,8 @@ pub struct Conf {
     pub public_path: String,
     /// 忽略的 markdown 文件或者路径
     pub ignore_markdown_path: Vec<String>,
+    /// 底部html代码
+    pub footer_html: String,
 }
 
 impl Conf {

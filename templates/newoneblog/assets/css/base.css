@@ -7,6 +7,7 @@ body {
     outline: none;
     -webkit-text-size-adjust: none;
     padding-top: 20px;
+    overflow-y: scroll;
 }
 
 #nav {
@@ -65,6 +66,13 @@ a.link:hover {
     color: #8bd450;
     /* background-color: #6235e7; */
     background-color: #3f6d4e;
+    padding: 0;
+    margin: 0;
+}
+
+a.link-nostyle {
+    text-decoration: none;
+    color: #1d1a2f;
     padding: 0;
     margin: 0;
 }

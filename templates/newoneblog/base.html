@@ -2,9 +2,9 @@
 <html lang="zh-CN">
 
 <head>
-    <link rel="stylesheet" href="/assets/css/theme.css" />
-    <link rel="stylesheet" href="/assets/css/skylighting-solarized-theme.css" />
-    <link rel="stylesheet" href="/assets/css/base.css" />
+    <link rel="stylesheet" href="/assets/css/theme.css?{{build_md_time}}" />
+    <link rel="stylesheet" href="/assets/css/skylighting-solarized-theme.css?{{build_md_time}}" />
+    <link rel="stylesheet" href="/assets/css/base.css?{{build_md_time}}" />
     <meta name="keywords" content="{{keywords}}">
     <meta name="description" content="{{description}}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,17 +24,11 @@
                 </li>
                 <li>|</li>
                 <li>
-                    <a target="_blank" href="/about.html">友情链接</a>
-                </li>
-                <li>|</li>
-                <li>
                     <a target="_blank" href="https://github.com/zzliujianbo/newoneblog">newoneblog构建</a>
                 </li>
             </ul>
         </div>
-        <div>
-            xx备案
-        </div>
+        {{ footer_html | safe }}
         {% block footer %}
         {% endblock footer %}
     </div>
