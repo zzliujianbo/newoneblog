@@ -195,7 +195,7 @@ fn md_metadata<P: AsRef<Path>>(md_path: &P) -> Option<MarkdownMetadata> {
     let md_str = md.to_str()?;
     let file_metadata = fs::metadata(md).ok()?;
     let content = read_to_string(md).ok()?;
-    let html_content = markdown::to_html(&content);
+    let html_content = markdown::to_html_with_options(&content, &markdown::Options::gfm()).unwrap();
     //截取html内容的前500个字符作为描述
     let description = html_content
         .chars()
