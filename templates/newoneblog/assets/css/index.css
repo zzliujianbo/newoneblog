@@ -1,5 +1,10 @@
 .article {
     padding-bottom: 5px;
+    border-bottom: #dbdbdb 1px solid;
+}
+
+.article:last-child {
+    border-bottom: none;
 }
 
 .article p {

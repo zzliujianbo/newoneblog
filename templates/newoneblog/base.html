@@ -12,7 +12,9 @@
 </head>
 
 <body>
-    {% include "nav.html" %}
+    {% block nav %}
+    {% include "nav.html" %} 
+    {% endblock nav %}
     <div id="content">{% block content %}{% endblock content %}</div>
     <div id="footer">
         <div class="row">

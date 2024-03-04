@@ -1,20 +1,17 @@
 body {
-    width: 1100px;
+    width: 1000px;
     margin-left: auto;
     margin-right: auto;
     font-family: PingFang SC, -apple-system, SF UI Text, Lucida Grande, STheiti, Microsoft YaHei, sans-serif;
     outline: none;
     -webkit-text-size-adjust: none;
-    padding-top: 20px;
+    padding-top: 10px;
     overflow-y: scroll;
     color: #000;
 }
 
 #nav {
-    text-align: right;
     font-size: 22px;
-    height: 50px;
-    border-bottom: #404040 2px solid;
 
     ul {
         padding: 10px;
@@ -32,18 +29,25 @@ body {
         }
 
         li.blog-brand {
-            text-align: left;
-            float: left;
+            text-align: right;
             margin-left: 0;
             font-size: 26px;
             font-weight: bold;
 
+            h4 {
+                margin-bottom: 0px;
+
+                a {
+                    border-bottom: #000 2px solid;
+                    padding-bottom: 5px;
+                }
+            }
         }
     }
 }
 
 #content {
-    width: 1080px;
+    max-width: 980px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -51,7 +55,7 @@ body {
 }
 
 #footer {
-    border-top: 2px solid #404040;
+    border-top: #dbdbdb 1px solid;
     text-align: center;
     font-size: 15px;
     padding-top: 20px;
