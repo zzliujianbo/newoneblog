@@ -6,34 +6,41 @@ newoneblog 是一个博客程序，将 markdown 文档转换为 html 文件。�
 
 ```json
 {
-  "server_ip": "127.0.0.1",
-  "server_port": 3000,
-  "title": "newoneblog",
-  "keywords": "rust, blog, newoneblog, markdown",
-  "description": "一个通过markdown生成博客的程序",
-  "markdown_path": "./markdown",
-  "template_path": "./templates/newoneblog",
-  "public_path": "./public",
-  "ignore_markdown_path": [
+    "server_ip": "127.0.0.1",
+    "server_port": 3000,
+    "title": "newoneblog",
+    "keywords": "rust, blog, newoneblog, markdown",
+    "description": "一个通过markdown生成博客的程序",
+    "markdown_path": "./markdown",
+    "template_path": "./templates/newoneblog",
+    "public_path": "./public",
+    "ignore_markdown_path": [
         "./markdown/.git",
         "./markdown/ignore-markdown"
-  ],
-  "footer_html": "<div>xx备案</div>"
+    ],
+    "footer_html": "<div>xx备案</div>",
+    "global_include_script": [
+        "./include_script/test.js"
+    ],
+    "global_include_script_path": [
+        "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    ]
 }
 ```
 
-| 配置字段             | 描述                                                     |
-| -------------------- | -------------------------------------------------------- |
-| server_ip            | web 服务 ip 地址                                         |
-| server_port          | web 服务端口                                             |
-| title                | 网站标题                                                 |
-| keyword              | 网站关键字                                               |
-| markdown_dir         | markdown 目录                                            |
-| template_path        | 网站模板目录                                             |
-| public_path          | 生成的 html 存放目录                                     |
-| ignore_markdown_path | 忽略的 markdown 文件或者路径，需要以markdown_dir路径开头 |
-| footer_html          | 底部html代码                                             |
-
+| 配置字段                   | 描述                                                                        |
+| -------------------------- | --------------------------------------------------------------------------- |
+| server_ip                  | web 服务 ip 地址                                                            |
+| server_port                | web 服务端口                                                                |
+| title                      | 网站标题                                                                    |
+| keyword                    | 网站关键字                                                                  |
+| markdown_dir               | markdown 目录                                                               |
+| template_path              | 网站模板目录                                                                |
+| public_path                | 生成的 html 存放目录                                                        |
+| ignore_markdown_path       | 忽略的 markdown 文件或者路径，需要以markdown_dir路径开头                    |
+| footer_html                | 底部html代码                                                                |
+| global_include_script      | 全局运行的script脚本，在base.html页面中以`<script>code</script>`方式 引入   |
+| global_include_script_path | 全局引入的script脚本，在base.html页面中以`<script src=""></script>`方式引入 |
 ## 2、启动
 
 ```shell
@@ -48,6 +55,7 @@ cargo watch -x "run --bin newoneblog"
 访问 `http://127.0.0.1:3000` 查看网站。
 
 ![网站图片](website.png)
+![网站图片](website2.png)
 
 ## 3、编译
 
