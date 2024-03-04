@@ -8,7 +8,13 @@
     integrity="sha512-h/laqMqQKUXxFuu6aLAaSrXYwGYQ7qk4aYCQ+KJwHZMzAGaEoxMM6h8C+haeJTU1V6E9jrSUnjpEzX23OmV/Aw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+<script src="assets/js/newoneblog.js"></script>
 <style>
     .markdown-body {
         box-sizing: border-box;
@@ -23,14 +29,47 @@
             padding: 15px;
         }
     }
+
+    .toc {
+        position: fixed;
+        top: 0;
+        left: 75%;
+        bottom: 0;
+        width: 260px;
+        max-height: 100%;
+        overflow-y: auto;
+        margin: 20px;
+        padding-top: 20%;
+        padding-left: 0;
+        /* border-left: 1px solid #e1e4e8; */
+    }
+
+    .toc .is-active-link::before {
+        background-color: #000;
+    } 
 </style>
 {% endblock head %}
 
 {% block content %}
 <article class="markdown-body">
+    <div class="toc"></div>
     {{ content | safe }}
 </article>
 <script>
-    hljs.highlightAll(); 
+    $(function () {
+        //https://tscanlin.github.io/tocbot/#requirements
+        makeIds('.markdown-body');
+        tocbot.init({
+            // Where to render the table of contents.
+            tocSelector: '.toc',
+            // Where to grab the headings to build the table of contents.
+            contentSelector: '.markdown-body',
+            // Which headings to grab inside of the contentSelector element.
+            headingSelector: 'h1, h2, h3, h4',
+            // For headings inside relative or absolute positioned containers within content.
+            hasInnerContainers: true,
+        });
+        hljs.highlightAll();
+    });
 </script>
 {% endblock content %}
