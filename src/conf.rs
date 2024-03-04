@@ -27,6 +27,10 @@ pub struct Conf {
     pub ignore_markdown_path: Vec<String>,
     /// 底部html代码
     pub footer_html: String,
+    /// 全局include脚本
+    pub global_include_script: Vec<String>,
+    /// 全局include脚本路径
+    pub global_include_script_path: Vec<String>,
 }
 
 impl Conf {

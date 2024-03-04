@@ -40,6 +40,19 @@ pub async fn run() {
         "build_md_time",
         &Local::now().format("%Y%m%d%H%M%S").to_string(),
     );
+    let mut global_include_script = String::from("<script>");
+    for path in &conf.global_include_script {
+        match fs::read_to_string(path) {
+            Ok(s) => global_include_script.push_str(&s),
+            Err(e) => error!("read global_include_script error: {}", e),
+        }
+    }
+    global_include_script.push_str("</script>");
+    context.insert("global_include_script", &global_include_script);
+    context.insert(
+        "global_include_script_path",
+        &conf.global_include_script_path,
+    );
 
     let mut md_metas = handle_md(
         &conf.markdown_path,
@@ -282,7 +295,8 @@ fn md_to_html(
         .unwrap()
         .html_path(html_file.to_string())
         .html_url(html_file.trim_start_matches(public_path).replace("\\", "/"));
-    context.insert("content", &md_metadata.html_content);
+    context.insert("md_title", &md_metadata.title);
+    context.insert("md_content", &md_metadata.html_content);
     info!("render {} --> {}", md_file, html_file);
     write_html(template_name, &html_file, context, tera);
     md_metadata

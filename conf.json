@@ -11,5 +11,11 @@
         "./markdown/.git",
         "./markdown/ignore-markdown"
     ],
-    "footer_html": "<div>xx备案</div>"
+    "footer_html": "<div>xx备案</div>",
+    "global_include_script": [
+        "./include_script/test.js"
+    ],
+    "global_include_script_path": [
+        "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    ]
 }

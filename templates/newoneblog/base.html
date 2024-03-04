@@ -7,13 +7,19 @@
     <meta name="description" content="{{description}}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block head %}
+    {% for js in global_include_script_path %}
+    <script src="{{js | safe}}"></script>
+    {% endfor %}
+
+    {{ global_include_script | safe }}
+
     <title>{% block title %}{% endblock title %}</title>
     {% endblock head %}
 </head>
 
 <body>
     {% block nav %}
-    {% include "nav.html" %} 
+    {% include "nav.html" %}
     {% endblock nav %}
     <div id="content">{% block content %}{% endblock content %}</div>
     <div id="footer">
