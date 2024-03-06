@@ -51,7 +51,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 #footer {
@@ -75,14 +75,17 @@ body {
 
 a {
     text-decoration: none;
+}
+
+.ahover {
     color: #000;
 }
 
-a:hover {
-    /* text-decoration: underline; */
+.ahover:hover {
     color: #fff;
     background-color: #000;
 }
+
 
 .row {
     margin-left: 0;

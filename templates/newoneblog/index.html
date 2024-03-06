@@ -5,25 +5,43 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="/assets/css/index.css?{{build_md_time}}" />
+<script>
+    $(function () {
+        $('.article').hover(function () {
+            $(this).addClass('articlehover');
+        }, function () {
+            $(this).removeClass('articlehover');
+        });
+    });
+</script>
 {% endblock head %}
 
 {% block content %}
 {% for md in md_metas %}
 {%if md.title != 'about'%}
 <div class="article">
-    <h4>
-        <a class="title" href="{{md.html_url | safe}}">{{md.title}}</a>
-    </h4>
-    <p>
-        {{md.description}}
-    </p>
-    <div class="more">
+    <a target="_blank" href="{{md.html_url | safe}}">
+        <h4>
+            <span class="title ahover">
+                {{md.title}}
+            </span>
+        </h4>
+        <p class="desc">
+            {{md.description}}
+        </p>
+        <div class="more">
+            <!--
         <a href="{{md.html_url | safe}}">阅读全文</a>
-        {% if md.update_date %}
-        {{ md.update_date | date }}
-        {% endif %}
-    </div>
+-->
+            {% if md.update_date %}
+            更新时间：{{ md.update_date | date }}
+            {% endif %}
+        </div>
+    </a>
 </div>
+{%if not loop.last%}
+<div class="line"></div>
+{%endif%}
 {%endif%}
 {% endfor %}
 {% endblock content %}
